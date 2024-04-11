@@ -9,8 +9,11 @@ sendButton.addEventListener('click', () => {
         userInput.value = '';
 
         getPredictedSentiment(userMessage)
-            .then(sentiment => {
-                displayMessage('bot', sentiment);
+            .then(response => {
+                const sentiment = response.sentiment;
+                const score = response.score;
+                const { emoji, message } = getMessageWithEmoji(sentiment, score);
+                displayMessage('bot', `${emoji} ${message}`);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -26,6 +29,28 @@ function displayMessage(sender, message) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+function getMessageWithEmoji(sentiment, score) {
+    let emoji, message;
+
+    if (sentiment === 'POSITIVE') {
+        emoji = '🙂';
+        message = 'I think you are feeling positive and happy.';
+    } else if (sentiment === 'NEGATIVE') {
+        if (score >= 0.7) {
+            emoji = '😠';
+            message = 'I think you are not satisfied, and your current mood is angry.';
+        } else {
+            emoji = '😔';
+            message = 'I think you are feeling a bit down and sad.';
+        }
+    } else {
+        emoji = '😐';
+        message = 'I think your mood is neutral.';
+    }
+
+    return { emoji, message };
+}
+
 async function getPredictedSentiment(text) {
     const response = await fetch('/sentiment', {
         method: 'POST',
@@ -36,8 +61,7 @@ async function getPredictedSentiment(text) {
     });
 
     if (response.ok) {
-        const sentiment = await response.json();
-        return `The predicted sentiment is ${sentiment.label} with a score of ${sentiment.score}.`;
+        return response.json();
     } else {
         throw new Error('Failed to predict sentiment');
     }

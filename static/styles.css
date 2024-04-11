@@ -29,7 +29,6 @@ body {
 .chat-messages {
     height: 300px;
     overflow-y: scroll;
-    border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 10px;
 }
@@ -52,4 +51,24 @@ body {
     padding: 10px 20px;
     border-radius: 0 5px 5px 0;
     cursor: pointer;
+}
+
+.message {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    max-width: 80%;
+}
+
+.user-message {
+    background-color: #4CAF50;
+    color: #fff;
+    align-self: flex-end;
+}
+
+.bot-message {
+    background-color: #f2f2f2;
+    color: #333;
+    align-self: flex-start;
 }

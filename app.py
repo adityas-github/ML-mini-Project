@@ -12,8 +12,10 @@ def index():
 @app.route('/sentiment', methods=['POST'])
 def predict_sentiment():
     text = request.get_json()['text']
-    sentiment = sent_pipeline(text)[0]
-    return jsonify(sentiment)
+    sentiment_output = sent_pipeline(text)[0]
+    sentiment = sentiment_output['label']
+    score = sentiment_output['score']
+    return jsonify({'sentiment': sentiment, 'score': score})
 
 if __name__ == '__main__':
     app.run(debug=True)
