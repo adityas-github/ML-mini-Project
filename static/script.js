@@ -7,7 +7,6 @@ sendButton.addEventListener('click', () => {
     if (userMessage) {
         displayMessage('user', userMessage);
         userInput.value = '';
-
         getPredictedSentiment(userMessage)
             .then(response => {
                 const sentiment = response.sentiment;
@@ -30,25 +29,51 @@ function displayMessage(sender, message) {
 }
 
 function getMessageWithEmoji(sentiment, score) {
-    let emoji, message;
-
-    if (sentiment === 'POSITIVE') {
-        emoji = '🙂';
-        message = 'I think you are feeling positive and happy.';
-    } else if (sentiment === 'NEGATIVE') {
-        if (score >= 0.7) {
-            emoji = '😠';
-            message = 'I think you are not satisfied, and your current mood is angry.';
-        } else {
-            emoji = '😔';
-            message = 'I think you are feeling a bit down and sad.';
-        }
-    } else {
-        emoji = '😐';
-        message = 'I think your mood is neutral.';
-    }
-
-    return { emoji, message };
+  let emoji, message;
+  if (sentiment === 'POSITIVE') {
+      if (score >= 0.95) {
+          emoji = '😁';
+          message = 'You seem absolutely ecstatic!';
+      } else if (score >= 0.9) {
+          emoji = '😄';
+          message = 'I think you are extremely happy!';
+      } else if (score >= 0.85) {
+          emoji = '😊';
+          message = 'You seem very cheerful!';
+      } else if (score >= 0.8) {
+          emoji = '😃';
+          message = 'I sense a lot of happiness in you!';
+      } else if (score >= 0.75) {
+          emoji = '🙂';
+          message = 'You appear quite positive!';
+      } else {
+          emoji = '😀';
+          message = 'You seem happy!';
+      }
+  } else if (sentiment === 'NEGATIVE') {
+      if (score >= 0.7) {
+          emoji = '😠';
+          message = 'I think you are not satisfied, and your current mood is angry.';
+      } else if (score >= 0.5) {
+          emoji = '😕';
+          message = 'I sense some negativity in your mood.';
+      } else {
+          emoji = '😞';
+          message = 'You seem to be feeling down and sad.';
+      }
+  } else {
+      if (score >= 0.6) {
+          emoji = '😐';
+          message = 'I think your mood is neutral.';
+      } else if (score >= 0.3) {
+          emoji = '😶';
+          message = 'I sense some neutrality in your mood.';
+      } else {
+          emoji = '😕';
+          message = 'I think you are feeling somewhat indifferent.';
+      }
+  }
+  return { emoji, message };
 }
 
 async function getPredictedSentiment(text) {
@@ -59,7 +84,6 @@ async function getPredictedSentiment(text) {
         },
         body: JSON.stringify({ text })
     });
-
     if (response.ok) {
         return response.json();
     } else {

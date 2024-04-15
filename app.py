@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, jsonify
 from transformers import pipeline
 
 app = Flask(__name__)
-
 sent_pipeline = pipeline("sentiment-analysis")
 
 @app.route('/')
